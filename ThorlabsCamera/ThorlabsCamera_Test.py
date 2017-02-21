@@ -2,21 +2,50 @@
 
 import uc480
 import matplotlib.pyplot as plt
+import time
+import numpy as np
 
-# create instance and connect to library
-cam = uc480.uc480()
+# Take single image test ----------------------------------------
+if False:
+	# create instance and connect to library
+	cam = uc480.uc480()
 
-# connect to first available camera
-cam.connect()
+	# connect to first available camera
+	cam.connect()
 
-# take a single image
-img = cam.acquire()
+	# take a single image
+	img = cam.acquire()
 
-# clean up
-cam.disconnect()
+	# clean up
+	cam.disconnect()
 
-plt.imshow(img[:,:,0], cmap='gray')
-plt.colorbar()
-plt.show()
+	plt.imshow(img[:,:])#, cmap='gray')
+	plt.colorbar()
+	plt.show()
 
-print(img.shape)
+	print(img.shape)
+
+# Multiple image test -------------------------------------------
+
+if True:
+	imgList = []
+	exposure = np.linspace(100,1000,5)
+
+	# create instance and connect to library
+	cam = uc480.uc480()
+
+	# connect to first available camera
+	cam.connect()
+
+	for i in range(len(exposure)):
+		cam.set_exposure(exposure[i])
+		time.sleep(0.5)
+		img = cam.acquire()
+		imgList.append(img)
+		plt.figure()
+		plt.imshow(imgList[-1], cmap='gray')
+
+	cam.disconnect()
+
+	plt.show()
+
